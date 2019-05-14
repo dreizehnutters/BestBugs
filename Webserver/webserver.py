@@ -1,8 +1,10 @@
 from flask import Flask
+from flask_restful import Api, Resource, reqparse, fields, marshal
 import json
 
 
 app = Flask(__name__)
+api = Api(app)
 
 
 @app.route('/')
@@ -10,20 +12,27 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/current_data', method = 'GET')
-def current_data():
-    current_temp = 25.2
-    current_moisture =
+class CurrentDataAPI(Resource):
+    def get(self):
+        pass
+
+    def post(self):
+        pass
 
 
-@app.route('/historical_data')
-def historical_data():
-    pass
+class HistoricalDataAPI(Resource):
+    def get(self):
+        pass
 
 
-@app.route('/feed')
-def feed():
-    pass
+class FeedAPI(Resource):
+    def get(self):
+        pass
+
+
+api.add_resource(CurrentDataAPI, '/current_data', endpoint='current_data')
+api.add_resource(HistoricalDataAPI, '/historical_data', endpoint='historical_data')
+api.add_resource(FeedAPI, '/feed', endpoint='feed')
 
 
 if __name__ == '__main__':
