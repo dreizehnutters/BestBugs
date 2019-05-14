@@ -14,19 +14,30 @@ def hello_world():
 
 class CurrentDataAPI(Resource):
     def get(self):
-        pass
+        current_temp = 30.2
+        current_moisture = 80
 
-    def post(self):
-        pass
+        data = {'current_temp': current_temp, 'current_moisture': current_moisture}
+
+        return json.dumps(data)
 
 
 class HistoricalDataAPI(Resource):
     def get(self):
-        pass
+        time = [0, 1, 2, 3, 4, 5, 6, 7]
+        temp = [25, 26, 25.8, 27.0, 28.3, 29, 30.3, 31]
+        moisture = [80, 75, 70, 74, 80, 85, 90, 92]
+
+        data = {'time': time, 'temp': temp, 'moisture': moisture}
+
+        return json.dumps(data)
 
 
 class FeedAPI(Resource):
     def get(self):
+        pass
+
+    def post(self):
         pass
 
 
