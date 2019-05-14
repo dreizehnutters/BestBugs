@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 
 import Widgets from "./Widgets";
+import BlockHeader from "./BlockHeader";
 /**
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -40,8 +41,10 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 4,
     padding: theme.spacing.unit * 2
   },
-  tiles: {
-    width: "100%"
+  chart: {
+    width: "100%",
+    height: "100%",
+    minHeight: "450px"
   }
 });
 
@@ -53,7 +56,45 @@ class Container extends Component {
 
     this.state = {
       textFieldValue:"",
-      widgetdata: Constants.WIDGET_ITEMS_DASHBOARD
+      widgetdata: Constants.WIDGET_ITEMS_DASHBOARD,
+      charts:[
+        {
+          "name":"moisture",
+          "x_axis":"Time",
+          "y_axis":"Moisture",
+          "data":[
+                  ['x', 'moisture'],
+                  [0, 0],
+                  [1, 10],
+                  [2, 23],
+                  [3, 17],
+                  [4, 18],
+                  [5, 9],
+                  [6, 11],
+                  [7, 27],
+                ],
+          "color":['blue']
+
+        },
+        {
+          "name":"temperature",
+          "x_axis":"Time",
+          "y_axis":"Temperature",
+          "data":[
+                  ['x', 'temp'],
+                  [0, 0],
+                  [1, 10],
+                  [2, 23],
+                  [3, 17],
+                  [4, 18],
+                  [5, 9],
+                  [6, 11],
+                  [7, 27],
+                ],
+          "color":['red']
+
+        },
+      ] 
     };
 
    // this.handleSubmit = this.handleSubmit.bind(this);
@@ -62,31 +103,7 @@ class Container extends Component {
 
     this.updateData();
   }
-  /**
-  handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(this,window);
-    StudioApi.textClassificationCall(this.state.textFieldValue,this.state.limit)
-    .then((data) => {
-      const result = data.data
-      if (result.length > 0) {
-        var ind = 0;
-        result.map(row => {
 
-          row["id"] = ind;
-          row["score"] = Number(row["score"]).toFixed(2);
-          ind += 1;
-        } )
-
-        this.setState({
-          rows: result
-        })
-
-
-      }
-    });
-  }
-  **/
   updateData(props) {
 
     StudioApi.getCurrentData()
@@ -100,6 +117,21 @@ class Container extends Component {
 
       this.setState({
         widgetdata: widgetdata
+      });
+
+      });
+
+    StudioApi.getHistoryData()
+    .then((data) => {
+      var stats = this.state.charts;
+      let chart_data = this.state.charts;
+
+      stats.forEach(function(element) {
+        console.log(element);
+      }, this);
+
+      this.setState({
+        charts: chart_data
       });
 
       });
@@ -122,41 +154,42 @@ class Container extends Component {
   render() {
     const { classes } = this.props;
 
-    return (
-      <div>
-
-        <div className={classes.root}>
-          <Widgets data={this.state.widgetdata} />
-          <Paper className={classes.center}>
+    const charts = this.state.charts.map((data) =>
+        <Grid item xs={12} sm={6} md={this.props.colSize} lg={this.props.colSize}>
               <Chart
-                width={'600px'}
-                height={'400px'}
+                className={classes.chart}
                 chartType="LineChart"
                 loader={<div>Loading Chart</div>}
-                data={[
-                  ['x', 'dogs', 'cats'],
-                  [0, 0, 0],
-                  [1, 10, 5],
-                  [2, 23, 15],
-                  [3, 17, 9],
-                  [4, 18, 10],
-                  [5, 9, 5],
-                  [6, 11, 3],
-                  [7, 27, 19],
-                ]}
+                data={data.data}
+
                 options={{
                   hAxis: {
-                    title: 'Time',
+                    title: data.x_axis,
                   },
                   vAxis: {
-                    title: 'Popularity',
+                    title: data.y_axis,
                   },
                   series: {
                     1: { curveType: 'function' },
                   },
+                  legend: {position: 'none'},
+                  colors: data.color, 
                 }}
                 rootProps={{ 'data-testid': '2' }}
               />
+        </Grid>
+    );
+
+    return (
+      <div>
+
+        <div className={classes.root}>
+          <BlockHeader name="Container 1" />
+          <Widgets data={this.state.widgetdata} />
+          <Paper className={classes.center}>
+          <Grid container spacing={24}>
+              {charts}
+            </Grid>
           </Paper>
         </div>
       </div>
