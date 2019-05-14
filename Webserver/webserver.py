@@ -84,7 +84,6 @@ class FeedAPI(Resource):
     @shelve_db_decorator
     def post(self):
         data = request.get_json()
-        print(json.dumps(data))
         pass
 
 
@@ -97,11 +96,7 @@ class ContainerListAPI(Resource):
     # add new container
     @shelve_db_decorator
     def post(self):
-        """
-        name : NEWKEY
-        """
         new_key = str(request.get_json()["name"])
-        print(new_key)
         shelve_db['containers'][new_key] = {}
         shelve_db['containers'][new_key]['historical_data'] = {'temp_history' : [], 'moisture_history': [] } 
 
@@ -122,10 +117,7 @@ class ContainerAPI(Resource):
     @shelve_db_decorator
     def post(self, container_id):
         cur_data = request.get_json()
-        print(3333, cur_data)
-        print(66666666, list(shelve_db['containers'][container_id].keys()))
-
-        print(shelve_db['containers'][container_id])
+        
         shelve_db['containers'][container_id]['current_data'] = cur_data
 
         hist_data = shelve_db['containers'][container_id]['historical_data']
