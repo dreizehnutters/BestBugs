@@ -1,9 +1,14 @@
-from flask import Flask
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import json
 
 
 app = Flask(__name__)
+
+# allow cors access to all resources on the server
+CORS(app, resources=r'/*', allow_headers='Content-Type')
+
 api = Api(app)
 
 
@@ -19,7 +24,7 @@ class CurrentDataAPI(Resource):
 
         data = {'current_temp': current_temp, 'current_moisture': current_moisture}
 
-        return json.dumps(data)
+        return jsonify(data)
 
 
 class HistoricalDataAPI(Resource):
@@ -30,7 +35,7 @@ class HistoricalDataAPI(Resource):
 
         data = {'time': time, 'temp': temp, 'moisture': moisture}
 
-        return json.dumps(data)
+        return jsonify(data)
 
 
 class FeedAPI(Resource):
@@ -38,6 +43,9 @@ class FeedAPI(Resource):
         pass
 
     def post(self):
+        data = request.get_json()
+        print(json.dumps(data))
+
         pass
 
 
