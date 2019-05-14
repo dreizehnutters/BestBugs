@@ -23,6 +23,8 @@ import { withCookies, Cookies } from 'react-cookie';
 import * as StudioApi from "../services/client/ml-studio-api";
 
 import * as Constants from "../constants";
+import small_insect from '../images/small_insect.png';
+import full_insect from '../images/full_insect.png';
 
 const styles = theme => ({
   root: {
@@ -31,7 +33,8 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'center',
+    margin: theme.spacing.unit * 2,
+    //textAlign: 'center',
     color: theme.palette.text.secondary,
   },
   center: {
@@ -45,6 +48,12 @@ const styles = theme => ({
     width: 128,
     height: 128,
   },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
 });
 
 class Dashboard extends Component {
@@ -55,7 +64,33 @@ class Dashboard extends Component {
 
     this.state = {
       textFieldValue:"",
-      widgetdata: Constants.WIDGET_ITEMS_DASHBOARD
+      widgetdata: Constants.WIDGET_ITEMS_DASHBOARD,
+      container: [
+        {
+          "image":small_insect,
+          "name": "Container 1",
+          "moisture": "55",
+          "temp": "34",
+          "id": 463463
+
+        },
+        {
+          "image":full_insect,
+          "name": "Container 2",
+          "moisture": "55",
+          "temp": "35",
+          "id": 464425
+
+        },
+        {
+          "image":full_insect,
+          "name": "Container 3",
+          "moisture": "55",
+          "temp": "35",
+          "id": 464425
+
+        },
+      ]
     };
 
    // this.handleSubmit = this.handleSubmit.bind(this);
@@ -94,14 +129,13 @@ class Dashboard extends Component {
     StudioApi.getCurrentData()
     .then((data) => {
       var stats = data;
-      let widgetdata = this.state.widgetdata;
+      let container = this.state.container;
 
-      widgetdata.forEach(function(element) {
-        element.VALUE = stats[element.KEY] + element.FORMAT;
-      }, this);
+      container[0].moisture = stats.current_moisture;
+      container[1].moisture = stats.current_temp;
 
       this.setState({
-        widgetdata: widgetdata
+        container: container
       });
 
       });
@@ -124,38 +158,45 @@ class Dashboard extends Component {
   render() {
     const { classes } = this.props;
 
-    return (
-      <div>
-
-        <div className={classes.root}>
-          <Paper className={classes.center}>
-            <Grid container spacing={24}>
-              <Paper className={classes.paper}>
-                <Grid container spacing={16}>
+    const listContainers = this.state.container.map((data) =>
+              <Paper key={data.name} className={classes.paper}>
+                <Grid container spacing={24}>
                   <Grid item>
                     <ButtonBase className={classes.image}>
-                      <img className={classes.img} alt="complex" src="../images/small_insect.png" />
+                      <img className={classes.img} alt="complex" src={data.image} />
                     </ButtonBase>
                   </Grid>
                   <Grid item xs={12} sm container>
                     <Grid item xs container direction="column" spacing={16}>
                       <Grid item xs>
                         <Typography gutterBottom variant="subtitle1">
-                          Standard license
+                          {data.name}
                         </Typography>
-                        <Typography gutterBottom>Full resolution 1920x1080 • JPEG</Typography>
-                        <Typography color="textSecondary">ID: 1030114</Typography>
+                        <Typography gutterBottom>Current Moisture: {data.moisture}</Typography>
+                        <Typography gutterBottom>Current Temperature: {data.temp}</Typography>
+                        <Typography color="textSecondary">ID: {data.id}</Typography>
                       </Grid>
                       <Grid item>
-                        <Typography style={{ cursor: 'pointer' }}>Remove</Typography>
+                        <Typography style={{ cursor: 'pointer' }}>Feed</Typography>
                       </Grid>
                     </Grid>
                     <Grid item>
-                      <Typography variant="subtitle1">$19.00</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
               </Paper>
+    );
+
+    return (
+      <div>
+
+        <div className={classes.root}>
+          <Paper className={classes.center}>
+            <Grid container spacing={24}>
+              
+                {listContainers}
+                
+             
             </Grid>
           </Paper>
         </div>

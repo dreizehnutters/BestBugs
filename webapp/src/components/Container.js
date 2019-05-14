@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
+import { Chart } from "react-google-charts";
+
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -126,7 +128,35 @@ class Container extends Component {
         <div className={classes.root}>
           <Widgets data={this.state.widgetdata} />
           <Paper className={classes.center}>
-            
+              <Chart
+                width={'600px'}
+                height={'400px'}
+                chartType="LineChart"
+                loader={<div>Loading Chart</div>}
+                data={[
+                  ['x', 'dogs', 'cats'],
+                  [0, 0, 0],
+                  [1, 10, 5],
+                  [2, 23, 15],
+                  [3, 17, 9],
+                  [4, 18, 10],
+                  [5, 9, 5],
+                  [6, 11, 3],
+                  [7, 27, 19],
+                ]}
+                options={{
+                  hAxis: {
+                    title: 'Time',
+                  },
+                  vAxis: {
+                    title: 'Popularity',
+                  },
+                  series: {
+                    1: { curveType: 'function' },
+                  },
+                }}
+                rootProps={{ 'data-testid': '2' }}
+              />
           </Paper>
         </div>
       </div>

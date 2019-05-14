@@ -9,6 +9,16 @@ const NAVBAR_ITEMS = [
         NAME: "Container 1",
         PATH: "/container"
       },
+    {
+        ICON: "crop_original",
+        NAME: "Container 2",
+        PATH: "/container"
+      },
+    {
+        ICON: "crop_original",
+        NAME: "Container 3",
+        PATH: "/container"
+      },
 
 ];
 
@@ -31,16 +41,16 @@ const WIDGET_ITEMS_DASHBOARD = [
     FORMAT: " °C",
     PATH: "/models"
   },
-  /**
+  
   {
     COLOR: "pink",
     ICON: "shopping_card",
-    NAME: "Current Weight",
-    VALUE: "2,3 kg",
-    KEY: "experimentsCount",
+    NAME: "Breeding Status",
+    VALUE: "2. Stage",
+    KEY: "breed_status",
     FORMAT: "numb",
     PATH: "/experiments"
-  }**/
+  }
 ];
 
 const DEMO_HEADER = "Insectus BestBugs"
