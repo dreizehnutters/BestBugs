@@ -52,6 +52,9 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  button: {
+    margin: theme.spacing.unit * 1,
+  }
 });
 
 class Dashboard extends Component {
@@ -179,6 +182,9 @@ class Dashboard extends Component {
                         <Button variant="contained" color="primary" className={classes.button}>
                           Feed
                         </Button>
+                        <Button variant="contained" color="secondary" className={classes.button}>
+                          Breed
+                        </Button>
                       </Grid>
                     </Grid>
                     <Grid item>
@@ -200,7 +206,11 @@ class Dashboard extends Component {
              
             </Grid>
           </Paper>
+          <Button component="span" variant="outlined" className={classes.button}>
+              Add Container
+            </Button>
         </div>
+
       </div>
     );
   };
