@@ -86,6 +86,9 @@ const styles = theme => ({
         width: 200,
       },
     },
+    avatar: {
+    margin: 10,
+  }
   },
 
   grid: {

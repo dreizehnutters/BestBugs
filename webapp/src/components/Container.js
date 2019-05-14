@@ -138,20 +138,42 @@ class Container extends Component {
 
       });
 
-    StudioApi.getHistoryData()
-    .then((data) => {
-      var stats = this.state.charts;
-      let chart_data = this.state.charts;
+    var that = this;
+    setTimeout(function(){
+        console.log("wait");
+        StudioApi.getHistoryData()
+        .then((data) => {
 
-      stats.forEach(function(element) {
-        console.log(element);
-      }, this);
+          let chart_data = that.state.charts;
 
-      this.setState({
-        charts: chart_data
-      });
+          console.log(data["hist_moist"].map(x => [new Date(
+            x[0].slice(0,2),
+            x[0].slice(3,5),
+            x[0].slice(6,10),
+            x[0].slice(11,13),
+            x[0].slice(14,16)),x[1]]));
 
-      });
+          chart_data[0].data = [['time', 'moisture']].concat(data["hist_moist"].map(x => [new Date(
+            x[0].slice(0,2),
+            x[0].slice(3,5),
+            x[0].slice(6,10),
+            x[0].slice(11,13),
+            x[0].slice(14,16)),x[1]]));
+          chart_data[1].data = [['time', 'temperature']].concat(data["hist_temp"].map(x => [new Date(
+            x[0].slice(0,2),
+            x[0].slice(3,5),
+            x[0].slice(6,10),
+            x[0].slice(11,13),
+            x[0].slice(14,16)),x[1]]));
+
+          that.setState({
+            charts: chart_data
+          });
+
+          });
+    }, 2000);
+
+    
   }
 
   reloadData() {
@@ -170,9 +192,9 @@ class Container extends Component {
     })
   };
 
-  componentWillReceiveProps(props){
-    console.log("hallo");
-  }
+  //componentWillReceiveProps(props){
+  //  console.log("hallo");
+  //}
 
   render() {
     const { classes } = this.props;
@@ -188,17 +210,30 @@ class Container extends Component {
                 options={{
                   hAxis: {
                     title: data.x_axis,
-                    titleFontSize: 20,
+                    titleFontSize: 15,
                     format: 'HH:mm',
                     textStyle : {
-                        fontSize: 15 // or the number you want
+                        fontSize: 10 // or the number you want
+                    },
+                    gridlines: {
+                      count: -1,
+                      units: {
+                        days: {format: ['MMM dd']},
+                        hours: {format: ['HH:mm', 'ha']},
+                      }
+                    },
+                    minorGridlines: {
+                      units: {
+                        hours: {format: ['hh:mm:ss a', 'ha']},
+                        minutes: {format: ['HH:mm a Z', ':mm']}
+                      }
                     }
                   },
                   vAxis: {
                     title: data.y_axis,
-                    titleFontSize: 20,
+                    titleFontSize: 15,
                     textStyle : {
-                        fontSize: 15 // or the number you want
+                        fontSize: 10 // or the number you want
                     }
                   },
                   series: {

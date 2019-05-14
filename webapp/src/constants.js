@@ -53,7 +53,7 @@ const WIDGET_ITEMS_DASHBOARD = [
   }
 ];
 
-const DEMO_HEADER = "Insectus BestBugs"
+const DEMO_HEADER = "BestBugs"
 
 const ENDPOINTS = {
     "url":"http://192.168.137.1:8000",
