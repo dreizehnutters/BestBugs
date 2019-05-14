@@ -76,24 +76,34 @@ class HistoricalDataAPI(Resource):
 
 
 class FeedAPI(Resource):
+    @shelve_db_decorator
     def get(self):
+        jsonify
         pass
 
+    @shelve_db_decorator
     def post(self):
         data = request.get_json()
         print(json.dumps(data))
-
         pass
 
 
 class ContainerListAPI(Resource):
     # get list of containers with all data
+    @shelve_db_decorator
     def get(self):
-        pass
+        return(jsonify(list(shelve_db['containers'].keys())))
 
     # add new container
+    @shelve_db_decorator
     def post(self):
-        pass
+        """
+        name : NEWKEY
+        """
+        new_key = str(request.get_json()["name"])
+        print(new_key)
+        shelve_db['containers'][new_key] = {}
+        shelve_db['containers'][new_key]['historical_data'] = {'temp_history' : [], 'moisture_history': [] } 
 
 
 
