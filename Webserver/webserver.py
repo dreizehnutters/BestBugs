@@ -122,21 +122,32 @@ class ContainerAPI(Resource):
     @shelve_db_decorator
     def post(self, container_id):
         cur_data = request.get_json()
+
+        if 'current_temp' in cur_data:
+            shelve_db['containers'][container_id]['current_data'] = cur_data
+
+            hist_data = shelve_db['containers'][container_id]['historical_data']
+
+            if platform != 'Windows':
+                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+            else:
+                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
+
+            hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
+            hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
+            
+            shelve_db['containers'][container_id]['historical_data'] = hist_data
         
-        shelve_db['containers'][container_id]['current_data'] = cur_data
+        if 'food' in cur_data:
+            print(33333 ,cur_data)
+            hist_data = shelve_db['containers'][container_id]['foods']
 
-        hist_data = shelve_db['containers'][container_id]['historical_data']
-
-        if platform != 'Windows':
-            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+            hist_data['food_history'].append([cur_data['food'], cur_data['weight']])
+            
+            shelve_db['containers'][container_id]['foods'] = hist_data
+        
         else:
-            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
-
-        hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
-        hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
-        
-        shelve_db['containers'][container_id]['historical_data'] = hist_data
-
+            print("panic")
 
     # delete container
     def delete(self, container_id):
