@@ -1,11 +1,16 @@
-from flask import Flask
+from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import json
 import functools
 import shelve
+import os
 
+app = Flask(__name__, static_folder='/webapp/build/static', template_folder='webapp/build')
 
-app = Flask(__name__)
+# allow cors access to all resources on the server
+CORS(app, resources=r'/*', allow_headers='Content-Type')
+
 api = Api(app)
 
 
@@ -23,6 +28,20 @@ def shelve_db_decorator(func):
     return inner
 
 
+@app.route('/demo/', defaults={'path': ''}, methods=['GET'])
+@app.route('/demo/<path:path>', methods=['GET'])
+def demo_app(path):
+    #log.warning('Loading from path: ' + str(path) + ' ' + str(os.getcwd()) + ' ' + str(os.path.dirname(os.path.abspath(__file__))))
+    demo_path = "webapp/build"
+    #log.warning(demo_path)
+
+    if path and os.path.exists(os.path.join(demo_path, path)):
+        return send_from_directory(demo_path, path)
+    else:
+        #log.warning('files in path does not exist: ' + demo_path)
+        return send_from_directory(demo_path, 'index.html')
+
+
 class RootAPI(Resource):
     @shelve_db_decorator
     def get(self):
@@ -36,7 +55,7 @@ class CurrentDataAPI(Resource):
 
         data = {'current_temp': current_temp, 'current_moisture': current_moisture}
 
-        return json.dumps(data)
+        return jsonify(data)
 
 
 class HistoricalDataAPI(Resource):
@@ -47,7 +66,7 @@ class HistoricalDataAPI(Resource):
 
         data = {'time': time, 'temp': temp, 'moisture': moisture}
 
-        return json.dumps(data)
+        return jsonify(data)
 
 
 class FeedAPI(Resource):
@@ -55,6 +74,9 @@ class FeedAPI(Resource):
         pass
 
     def post(self):
+        data = request.get_json()
+        print(json.dumps(data))
+
         pass
 
 
