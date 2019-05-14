@@ -20,13 +20,11 @@
 #define MOISTURE_TOO_WET 60
 
 
-
 CRGB leds[N_LEDS];
 CRGB led_color = CRGB::Black;
 
 
 unsigned long postTimer;
-
 
 int readMoisture(){
   // initialize data
@@ -37,17 +35,17 @@ int readMoisture(){
   sensorValue = analogRead(MOISTURE_SENSOR_ANALOG_PIN);
 
   // map it to the moisture rating
-  moistureValue = map(sensorValue, MOISTURE_SENSOR_MIN, MOISTURE_SENSOR_MAX, 0, 100);
+  moistureValue = map(sensorValue, MOISTURE_SENSOR_MIN, MOISTURE_SENSOR_MAX / 2, 0, 100);
   moistureValue = constrain(moistureValue, 0, 100);
 
   return(moistureValue);
 }
 
-int readTemperature(){
-  return(24 + random(-1,1));
+float readTemperature(){
+  return(24.0 + (random(-10,10) / 10.0));
 }
 
-void postMyData(int moisture, int temperature){
+void postMyData(int moisture, float temperature){
     if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
  
       StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
@@ -78,8 +76,6 @@ void postMyData(int moisture, int temperature){
     Serial.println("Error in WiFi connection");
  
   }
-
-  
  
 }
 
@@ -105,7 +101,7 @@ void loop() {
   int sat = SAT;
   int val = VAL;
   int moistureValue = readMoisture();
-  int temperatureValue = readTemperature();
+  float temperatureValue = readTemperature();
   Serial.printf("Moisture Value = %d %% \n", readMoisture());
   
   hue = map(moistureValue, 0, 100, 0, 160);
