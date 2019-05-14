@@ -7,6 +7,9 @@ import shelve
 import os
 from datetime import datetime, timezone
 import platform
+from threading import Lock
+
+mutex = Lock()
 
 platform = platform.system()
 
@@ -24,10 +27,13 @@ api.app.config['DATABASE'] = 'database_shelve'
 def shelve_db_decorator(func):
     @functools.wraps(func)
     def inner(*args, **kwargs):
+        mutex.acquire()
         global shelve_db  # global is necessary, otherwise func can't see shelve_db
         # opens and closes shelve database automatically even if an exception is raised
         with shelve.open(api.app.config['DATABASE'], writeback=True) as shelve_db:
             rv = func(*args, **kwargs)
+
+        mutex.release()
         return rv
     return inner
 
@@ -123,15 +129,15 @@ class ContainerAPI(Resource):
     def post(self, container_id):
         cur_data = request.get_json()
 
+        if platform != 'Windows':
+                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+            else:
+                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
+
         if 'current_temp' in cur_data:
             shelve_db['containers'][container_id]['current_data'] = cur_data
 
             hist_data = shelve_db['containers'][container_id]['historical_data']
-
-            if platform != 'Windows':
-                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
-            else:
-                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
 
             hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
             hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
@@ -142,12 +148,12 @@ class ContainerAPI(Resource):
             print(33333 ,cur_data)
             hist_data = shelve_db['containers'][container_id]['foods']
 
-            hist_data['food_history'].append([cur_data['food'], cur_data['weight']])
+            hist_data['food_history'].append([cur_data['time'], cur_data['food'], cur_data['weight']])
             
             shelve_db['containers'][container_id]['foods'] = hist_data
         
         else:
-            print("panic")
+            print("panic", cur_data)
 
     # delete container
     def delete(self, container_id):
