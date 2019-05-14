@@ -1,15 +1,32 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import json
+import functools
+import shelve
 
 
 app = Flask(__name__)
 api = Api(app)
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+api.app.config['DATABASE'] = 'database_shelve'
+
+
+def shelve_db_decorator(func):
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+        global shelve_db  # global is necessary, otherwise func can't see shelve_db
+        # opens and closes shelve database automatically even if an exception is raised
+        with shelve.open(api.app.config['DATABASE'], writeback=True) as shelve_db:
+            rv = func(*args, **kwargs)
+        return rv
+    return inner
+
+
+class RootAPI(Resource):
+    @shelve_db_decorator
+    def get(self):
+        return shelve_db['test']
 
 
 class CurrentDataAPI(Resource):
@@ -41,6 +58,7 @@ class FeedAPI(Resource):
         pass
 
 
+api.add_resource(RootAPI, '/', endpoint='/')
 api.add_resource(CurrentDataAPI, '/current_data', endpoint='current_data')
 api.add_resource(HistoricalDataAPI, '/historical_data', endpoint='historical_data')
 api.add_resource(FeedAPI, '/feed', endpoint='feed')
