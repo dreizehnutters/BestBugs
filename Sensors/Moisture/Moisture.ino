@@ -1,8 +1,7 @@
+#define MOISTURE_SENSOR_ANALOG_PIN A0
 #define MOISTURE_SENSOR_MIN 0
 #define MOISTURE_SENSOR_MAX 950
 
-
-const int analogInPin = A0;  // ESP8266 Analog Pin ADC0 = A0
 int sensorValue = 0;
 
 // moisture value ranges from 0 to 100 %
@@ -15,7 +14,7 @@ void setup() {
 
 void loop() {
   // read the analog in value of the moisture sensor
-  sensorValue = analogRead(analogInPin);
+  sensorValue = analogRead(MOISTURE_SENSOR_ANALOG_PIN);
 
   // map it to the moisture rating
   moistureValue = map(sensorValue, MOISTURE_SENSOR_MIN, MOISTURE_SENSOR_MAX, 0, 100);

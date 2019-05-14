@@ -58,10 +58,36 @@ class FeedAPI(Resource):
         pass
 
 
+class ContainerListAPI(Resource):
+    # get list of containers with all data
+    def get(self):
+        pass
+
+    # add new container
+    def post(self):
+        pass
+
+
+class ContainerAPI(Resource):
+    # get container data
+    def get(self, container_id):
+        pass
+
+    # post sensor data
+    def post(self, container_id):
+        pass
+
+    # delete container
+    def delete(self, container_id):
+        pass
+
+
 api.add_resource(RootAPI, '/', endpoint='/')
 api.add_resource(CurrentDataAPI, '/current_data', endpoint='current_data')
 api.add_resource(HistoricalDataAPI, '/historical_data', endpoint='historical_data')
 api.add_resource(FeedAPI, '/feed', endpoint='feed')
+api.add_resource(ContainerListAPI, '/containers', endpoint='containers')
+api.add_resource(ContainerAPI, '/containers/<container_id>', endpoint='container')
 
 
 if __name__ == '__main__':
