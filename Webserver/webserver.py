@@ -53,11 +53,16 @@ class RootAPI(Resource):
 
 
 class CurrentDataAPI(Resource):
+    @shelve_db_decorator
     def get(self):
-        current_temp = 30.2
-        current_moisture = 80
+        container_id = '1'
 
-        data = {'current_temp': current_temp, 'current_moisture': current_moisture}
+        current_breed_status = 2
+        current_temp = shelve_db['containers'][container_id]['current_data']['current_temp']
+        current_moisture = shelve_db['containers'][container_id]['current_data']['current_moisture']
+
+        data = {'current_temp': current_temp, 'current_moisture': current_moisture,
+                'current_breed_status': current_breed_status}
 
         return jsonify(data)
 
