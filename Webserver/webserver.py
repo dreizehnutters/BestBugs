@@ -113,27 +113,23 @@ class ContainerAPI(Resource):
     def post(self, container_id):
         cur_data = request.get_json()
         print(3333, cur_data)
-        try:
-            shelve_db['containers'][container_id] = {'current_data': cur_data}
-        except KeyError:
-            print(121223213)
+        print(66666666, list(shelve_db['containers'][container_id].keys()))
+
+        print(shelve_db['containers'][container_id])
+        shelve_db['containers'][container_id]['current_data'] = cur_data
+
+        hist_data = shelve_db['containers'][container_id]['historical_data']
+
+        if platform != 'Windows':
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
         else:
-            try:
-                hist_data = shelve_db['containers'][container_id]['historical_data']
-            except KeyError as e:
-                print("init", e)
-                shelve_db['containers'][container_id]['historical_data'] = {'temp_history': [[]], 'moisture_history': [[]]}
-                hist_data = {'temp_history': [[]], 'moisture_history': [[]]}
-            finally:
-                print("fffff", shelve_db['containers'][container_id]['historical_data'])
-                if platform != 'Windows':
-                    cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
-                else:
-                    cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
-                hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
-                hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
-                print(324324, hist_data)
-                shelve_db['containers'][container_id]['historical_data'] = hist_data
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
+
+        hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
+        hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
+        
+        shelve_db['containers'][container_id]['historical_data'] = hist_data
+
 
     # delete container
     def delete(self, container_id):
