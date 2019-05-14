@@ -1,3 +1,4 @@
 Flask==1.0.2
 Flask-RESTful==0.3.7
+Flask-Shelve==0.1.1
 requests==2.21.0
