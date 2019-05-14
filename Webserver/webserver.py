@@ -5,6 +5,10 @@ import json
 import functools
 import shelve
 import os
+from datetime import datetime, timezone
+import platform
+
+platform = platform.system()
 
 app = Flask(__name__, static_folder='/webapp/build/static', template_folder='webapp/build')
 
@@ -99,7 +103,7 @@ class ContainerAPI(Resource):
     # get container data
     @shelve_db_decorator
     def get(self, container_id):
-        return json.dumps(shelve_db['container'+str(container_id)])
+        return json.dumps(shelve_db['containers'][container_id])
 
     # post sensor data
     @shelve_db_decorator
@@ -107,23 +111,26 @@ class ContainerAPI(Resource):
         cur_data = request.get_json()
         print(3333, cur_data)
         try:
-            shelve_db['container'+str(container_id)] = {'current_data': cur_data}
+            shelve_db['containers'][container_id] = {'current_data': cur_data}
         except KeyError:
             print(121223213)
         else:
             try:
-                hist_data = shelve_db['container'+str(container_id)]['historical_data']
+                hist_data = shelve_db['containers'][container_id]['historical_data']
             except KeyError as e:
                 print("init", e)
-                shelve_db['container'+str(container_id)]['historical_data'] = {'temp_history': [[]], 'moisture_history': [[]]}
+                shelve_db['containers'][container_id]['historical_data'] = {'temp_history': [[]], 'moisture_history': [[]]}
                 hist_data = {'temp_history': [[]], 'moisture_history': [[]]}
             finally:
-                print("fffff", shelve_db['container'+str(container_id)]['historical_data'])
-                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+                print("fffff", shelve_db['containers'][container_id]['historical_data'])
+                if platform != 'Windows':
+                    cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+                else:
+                    cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
                 hist_data['temp_history'].append([cur_time, cur_data['current_temp']])
                 hist_data['moisture_history'].append([cur_time, cur_data['current_moisture']])
                 print(324324, hist_data)
-                shelve_db['container'+str(container_id)]['historical_data'] = hist_data
+                shelve_db['containers'][container_id]['historical_data'] = hist_data
 
     # delete container
     def delete(self, container_id):
