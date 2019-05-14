@@ -1,12 +1,12 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import json
 import functools
 import shelve
+import os
 
-
-app = Flask(__name__)
+app = Flask(__name__, static_folder='/webapp/build/static', template_folder='webapp/build')
 
 # allow cors access to all resources on the server
 CORS(app, resources=r'/*', allow_headers='Content-Type')
@@ -26,6 +26,20 @@ def shelve_db_decorator(func):
             rv = func(*args, **kwargs)
         return rv
     return inner
+
+
+@app.route('/demo/', defaults={'path': ''}, methods=['GET'])
+@app.route('/demo/<path:path>', methods=['GET'])
+def demo_app(path):
+    #log.warning('Loading from path: ' + str(path) + ' ' + str(os.getcwd()) + ' ' + str(os.path.dirname(os.path.abspath(__file__))))
+    demo_path = "webapp/build"
+    #log.warning(demo_path)
+
+    if path and os.path.exists(os.path.join(demo_path, path)):
+        return send_from_directory(demo_path, path)
+    else:
+        #log.warning('files in path does not exist: ' + demo_path)
+        return send_from_directory(demo_path, 'index.html')
 
 
 class RootAPI(Resource):
