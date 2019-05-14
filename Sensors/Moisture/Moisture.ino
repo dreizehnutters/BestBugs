@@ -11,6 +11,8 @@
 #define SAT 255
 #define VAL 255
 
+#define POST_INTERVAL_MS 10000
+
 // 0 < moistureValue < MOISTURE_TOO_DRY -> more water needed (red LEDs)
 // MOISTURE_TOO_DRY < moistureValue < MOISTURE_TOO_WET -> moisture ok (green LEDs)
 // MOISTURE_TOO_WET < moistureValue < 100 -> too wet, raise temperature (blue LEDs)
@@ -23,7 +25,10 @@ CRGB leds[N_LEDS];
 CRGB led_color = CRGB::Black;
 
 
-int readMoisture() {
+unsigned long postTimer;
+
+
+int readMoisture(){
   // initialize data
   int sensorValue = 0;
   int moistureValue = 0;
@@ -38,23 +43,18 @@ int readMoisture() {
   return(moistureValue);
 }
 
-void postMyData(){
+int readTemperature(){
+  return(24 + random(-1,1));
+}
+
+void postMyData(int moisture, int temperature){
     if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
  
       StaticJsonBuffer<300> JSONbuffer;   //Declaring static JSON buffer
       JsonObject& JSONencoder = JSONbuffer.createObject(); 
-   
-      JSONencoder["sensorType"] = "Temperature";
-   
-      JsonArray& values = JSONencoder.createNestedArray("values"); //JSON array
-      values.add(20); //Add value to array
-      values.add(21); //Add value to array
-      values.add(23); //Add value to array
-   
-      JsonArray& timestamps = JSONencoder.createNestedArray("timestamps"); //JSON array
-      timestamps.add("10:10"); //Add value to array
-      timestamps.add("10:20"); //Add value to array
-      timestamps.add("10:30"); //Add value to array
+
+      JSONencoder["current_moisture"] = moisture;
+      JSONencoder["current_temp"] = temperature;
    
       char JSONmessageBuffer[300];
       JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
@@ -62,7 +62,7 @@ void postMyData(){
    
       HTTPClient http;    //Declare object of class HTTPClient
    
-      http.begin("http://anteph.pythonanywhere.com/postjson");      //Specify request destination
+      http.begin("http://192.168.137.1:8000/containers/1");      //Specify request destination
       http.addHeader("Content-Type", "application/json");  //Specify content-type header
    
       int httpCode = http.POST(JSONmessageBuffer);   //Send the request
@@ -78,6 +78,8 @@ void postMyData(){
     Serial.println("Error in WiFi connection");
  
   }
+
+  
  
 }
 
@@ -88,20 +90,22 @@ void setup() {
   // LED setup
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, N_LEDS);
   // WiFi setup
-  WiFi.begin("BestBugsLAN", "yummybugs<3");   //WiFi connection
+  WiFi.begin("BestBugsLAN", "yummybugs");   //WiFi connection
  
   while (WiFi.status() != WL_CONNECTED) {  //Wait for the WiFI connection completion
     delay(500);
     Serial.println("Waiting for connection");
   }
-  postMyData();
+
+  postTimer = millis();
 }
 
 void loop() {
   int hue = 0;
   int sat = SAT;
   int val = VAL;
-  int moistureValue = readMoisture();  
+  int moistureValue = readMoisture();
+  int temperatureValue = readTemperature();
   Serial.printf("Moisture Value = %d %% \n", readMoisture());
   
   hue = map(moistureValue, 0, 100, 0, 160);
@@ -110,5 +114,10 @@ void loop() {
   }
   FastLED.show();
 
-  delay(1000);
+  if((millis() - postTimer) > POST_INTERVAL_MS) {
+    postMyData(moistureValue, temperatureValue);
+    postTimer = millis();
+  }
+  
+  delay(500);
 }
