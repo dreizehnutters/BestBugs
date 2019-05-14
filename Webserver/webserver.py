@@ -89,7 +89,6 @@ class HistoricalDataAPI(Resource):
 class FeedAPI(Resource):
     @shelve_db_decorator
     def get(self):
-        jsonify
         pass
 
     @shelve_db_decorator
@@ -130,9 +129,9 @@ class ContainerAPI(Resource):
         cur_data = request.get_json()
 
         if platform != 'Windows':
-                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
-            else:
-                cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+        else:
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
 
         if 'current_temp' in cur_data:
             shelve_db['containers'][container_id]['current_data'] = cur_data
