@@ -28,8 +28,22 @@ function getHistoryData() {
         });
 }
 
+function sendFeeding(data) {
+    return fetch(
+        ENDPOINTS.url + ENDPOINTS.feeding,
+         {
+          "method": "POST",
+          //"credentials": "include",
+          "headers": {"Content-Type": "text/plain", "accept": "application/json"},
+          "body": JSON.stringify(data),
+        }).then(response => {
+            return response.json();
+        });
+}
+
 
   export {
     getCurrentData,
-    getHistoryData
+    getHistoryData,
+    sendFeeding
   }

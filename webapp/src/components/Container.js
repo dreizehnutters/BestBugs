@@ -13,6 +13,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 
 import Widgets from "./Widgets";
 import BlockHeader from "./BlockHeader";
+import Dialogs from "./Dialogs";
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -63,8 +64,11 @@ class Container extends Component {
 
     const { cookies } = this.props;
 
+    //this.child = React.createRef();
+
     this.state = {
       textFieldValue:"",
+      dialog_open: false,
       widgetdata: Constants.WIDGET_ITEMS_DASHBOARD,
       charts:[
         {
@@ -111,6 +115,7 @@ class Container extends Component {
    // this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateData = this.updateData.bind(this);
+    this.onFeedClick = this.onFeedClick.bind(this);
 
     this.updateData();
   }
@@ -159,6 +164,12 @@ class Container extends Component {
     })
   }
 
+  onFeedClick(){
+    this.setState({
+      dialog_open:true
+    })
+  };
+
   componentWillReceiveProps(props){
     console.log("hallo");
   }
@@ -167,7 +178,7 @@ class Container extends Component {
     const { classes } = this.props;
 
     const charts = this.state.charts.map((data) =>
-        <Grid item xs={12} sm={6} md={this.props.colSize} lg={this.props.colSize}>
+        <Grid key={data.title} item xs={12} sm={6} md={this.props.colSize} lg={this.props.colSize}>
               <Chart
                 className={classes.chart}
                 chartType="LineChart"
@@ -216,7 +227,7 @@ class Container extends Component {
           <Button variant="contained" className={classes.button} onClick={this.updateData}>
               Reload
             </Button>
-          <Button variant="contained" color="primary" className={classes.button}>
+          <Button variant="contained" color="primary" className={classes.button} onClick={this.onFeedClick}>
               Feed
             </Button>
           <Button variant="contained" color="secondary" className={classes.button}>
@@ -250,6 +261,7 @@ class Container extends Component {
           </Paper>
           
         </div>
+        <Dialogs dialog_open={this.state.dialog_open}/>
       </div>
     );
   };

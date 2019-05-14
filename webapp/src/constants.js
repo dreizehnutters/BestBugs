@@ -58,7 +58,8 @@ const DEMO_HEADER = "Insectus BestBugs"
 const ENDPOINTS = {
     "url":"http://192.168.137.1:8000",
     "current_data": "/current_data",
-    "history":"/historical_data"
+    "history":"/historical_data",
+    "feeding":"/containers/1"
 }
 
 

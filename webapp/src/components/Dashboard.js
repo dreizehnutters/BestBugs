@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import Avatar from '@material-ui/core/Avatar';
 
 import Widgets from "./Widgets";
 import BlockHeader from "./BlockHeader";
@@ -43,14 +44,14 @@ const styles = theme => ({
     padding: theme.spacing.unit * 2
   },
   image: {
-    width: 128,
-    height: 128,
+    width: 80,
+    height: 80,
   },
   img: {
     margin: 'auto',
     display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxWidth: '70%',
+    maxHeight: '70%',
   },
   button: {
     margin: theme.spacing.unit * 1,
@@ -164,9 +165,9 @@ class Dashboard extends Component {
                 <Paper key={data.name} className={classes.paper}>
                 <Grid container spacing={24}>
                   <Grid item>
-                    <ButtonBase className={classes.image}>
+                    <Avatar className={classes.image}>
                       <img className={classes.img} alt="complex" src={data.image} />
-                    </ButtonBase>
+                    </Avatar>
                   </Grid>
                   <Grid item xs={12} sm container>
                     <Grid item xs container direction="column" spacing={16}>
