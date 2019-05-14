@@ -15,7 +15,21 @@ function getCurrentData() {
         });
 }
 
+function getHistoryData() {
+    return fetch(
+        ENDPOINTS.url + ENDPOINTS.history,
+         {
+          "method": "GET",
+          //"credentials": "include",
+          "headers": {"Content-Type": "text/plain", "accept": "application/json"},
+          //"body": text
+        }).then(response => {
+            return response.json();
+        });
+}
+
 
   export {
-    getCurrentData
+    getCurrentData,
+    getHistoryData
   }

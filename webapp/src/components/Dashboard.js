@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 
 import Widgets from "./Widgets";
+import BlockHeader from "./BlockHeader";
 /**
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -86,8 +87,8 @@ class Dashboard extends Component {
           "image":full_insect,
           "name": "Container 3",
           "moisture": "55",
-          "temp": "35",
-          "id": 464425
+          "temp": "28",
+          "id": 46443225
 
         },
       ]
@@ -191,6 +192,7 @@ class Dashboard extends Component {
       <div>
 
         <div className={classes.root}>
+          <BlockHeader name="Dashboard" />
           <Paper className={classes.center}>
             <Grid container spacing={24}>
               
