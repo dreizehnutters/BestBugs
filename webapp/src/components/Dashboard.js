@@ -42,9 +42,6 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 4,
     padding: theme.spacing.unit * 2
   },
-  tiles: {
-    width: "100%"
-  },
   image: {
     width: 128,
     height: 128,
@@ -160,7 +157,8 @@ class Dashboard extends Component {
     const { classes } = this.props;
 
     const listContainers = this.state.container.map((data) =>
-              <Paper key={data.name} className={classes.paper}>
+                <Grid item xs>
+                <Paper key={data.name} className={classes.paper}>
                 <Grid container spacing={24}>
                   <Grid item>
                     <ButtonBase className={classes.image}>
@@ -178,14 +176,17 @@ class Dashboard extends Component {
                         <Typography color="textSecondary">ID: {data.id}</Typography>
                       </Grid>
                       <Grid item>
-                        <Typography style={{ cursor: 'pointer' }}>Feed</Typography>
+                        <Button variant="contained" color="primary" className={classes.button}>
+                          Feed
+                        </Button>
                       </Grid>
                     </Grid>
                     <Grid item>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Paper>
+                </Paper>
+                </Grid>
     );
 
     return (
@@ -195,9 +196,7 @@ class Dashboard extends Component {
           <BlockHeader name="Dashboard" />
           <Paper className={classes.center}>
             <Grid container spacing={24}>
-              
                 {listContainers}
-                
              
             </Grid>
           </Paper>

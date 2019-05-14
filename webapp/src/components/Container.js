@@ -112,7 +112,12 @@ class Container extends Component {
       let widgetdata = this.state.widgetdata;
 
       widgetdata.forEach(function(element) {
-        element.VALUE = stats[element.KEY] + element.FORMAT;
+        if(stats[element.KEY] != undefined){
+          element.VALUE = stats[element.KEY] + element.FORMAT;
+        }else{
+          element.VALUE = "2. Stage"
+        }
+        
       }, this);
 
       this.setState({

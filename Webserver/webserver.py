@@ -63,12 +63,14 @@ class CurrentDataAPI(Resource):
 
 
 class HistoricalDataAPI(Resource):
+    @shelve_db_decorator
     def get(self):
-        time = [0, 1, 2, 3, 4, 5, 6, 7]
-        temp = [25, 26, 25.8, 27.0, 28.3, 29, 30.3, 31]
-        moisture = [80, 75, 70, 74, 80, 85, 90, 92]
+        container_id = '1'
 
-        data = {'time': time, 'temp': temp, 'moisture': moisture}
+        hist_temp = shelve_db['containers'][container_id]['historical_data']['temp_history']
+        hist_moist = shelve_db['containers'][container_id]['historical_data']['moisture_history']
+
+        data = {'hist_temp': hist_temp, 'hist_moist': hist_moist}
 
         return jsonify(data)
 
@@ -98,6 +100,7 @@ class ContainerListAPI(Resource):
 """
 curl -i -H "Content-Type: application/json" -X POST -d '{"current_temp": 555511115666, "current_moisture": 555511115123}' 0.0.0.0:8000/containers/2
 """
+
 
 class ContainerAPI(Resource):
     # get container data
