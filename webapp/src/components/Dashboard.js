@@ -71,24 +71,24 @@ class Dashboard extends Component {
         {
           "image":small_insect,
           "name": "Container 1",
-          "moisture": "55",
-          "temp": "34",
+          "moisture": "55 %",
+          "temp": "34 °C",
           "id": 463463
 
         },
         {
           "image":full_insect,
           "name": "Container 2",
-          "moisture": "55",
-          "temp": "35",
+          "moisture": "55 %",
+          "temp": "35 °C",
           "id": 464425
 
         },
         {
           "image":full_insect,
           "name": "Container 3",
-          "moisture": "55",
-          "temp": "28",
+          "moisture": "55 %",
+          "temp": "28 °C",
           "id": 46443225
 
         },
@@ -133,8 +133,8 @@ class Dashboard extends Component {
       var stats = data;
       let container = this.state.container;
 
-      container[0].moisture = stats.current_moisture;
-      container[1].moisture = stats.current_temp;
+      container[0].moisture = stats.current_moisture + " %";
+      container[0].temp = stats.current_temp + " °C";
 
       this.setState({
         container: container
@@ -161,7 +161,7 @@ class Dashboard extends Component {
     const { classes } = this.props;
 
     const listContainers = this.state.container.map((data) =>
-                <Grid item xs>
+                <Grid item xs={12} sm >
                 <Paper key={data.name} className={classes.paper}>
                 <Grid container spacing={24}>
                   <Grid item>
@@ -169,7 +169,7 @@ class Dashboard extends Component {
                       <img className={classes.img} alt="complex" src={data.image} />
                     </Avatar>
                   </Grid>
-                  <Grid item xs={12} sm container>
+                  <Grid item xs={6} sm container>
                     <Grid item xs container direction="column" spacing={16}>
                       <Grid item xs>
                         <Typography gutterBottom variant="subtitle1">
@@ -200,7 +200,7 @@ class Dashboard extends Component {
       <div>
 
         <div className={classes.root}>
-          <BlockHeader name="Dashboard" />
+          <BlockHeader name="" />
           <Paper className={classes.center}>
             <Grid container spacing={24}>
                 {listContainers}

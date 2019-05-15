@@ -86,6 +86,9 @@ const styles = theme => ({
         width: 200,
       },
     },
+    avatar: {
+    margin: 10,
+  }
   },
 
   grid: {
@@ -146,9 +149,10 @@ class App extends Component {
                   </ListItem>);
               })}
             </Menu>
-	          <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-	            {Constants.DEMO_HEADER}
-	          </Typography>
+            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+              {Constants.DEMO_HEADER}
+            </Typography>
+            
 	          <div className={classes.grow} />
 	          <div className={classes.search}>
 	            <div className={classes.searchIcon}>

@@ -34,7 +34,7 @@ function sendFeeding(data) {
          {
           "method": "POST",
           //"credentials": "include",
-          "headers": {"Content-Type": "text/plain", "accept": "application/json"},
+          "headers": {"Content-Type": 'application/json', "accept": "application/json"},
           "body": JSON.stringify(data),
         }).then(response => {
             return response.json();
