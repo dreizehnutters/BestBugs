@@ -224,8 +224,8 @@ class Container extends Component {
                     },
                     minorGridlines: {
                       units: {
-                        hours: {format: ['hh:mm:ss a', 'ha']},
-                        minutes: {format: ['HH:mm a Z', ':mm']}
+                        hours: {format: ['HH:mm', 'ha']},
+                        minutes: {format: ['HH:mm', ':mm']}
                       }
                     }
                   },

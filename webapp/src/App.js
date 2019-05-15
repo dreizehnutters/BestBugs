@@ -28,8 +28,6 @@ import ContentContainer from "./components/ContentContainer";
 import { mapStateToProps } from "./reduxUtils";
 import { withCookies, Cookies } from "react-cookie";
 import ListItem from '@material-ui/core/ListItem';
-import insectus from './images/insectus_.png';
-import Image from 'material-ui-image';
 
 const styles = theme => ({
   root: {
@@ -98,13 +96,6 @@ const styles = theme => ({
   }
 });
 
-var image_style = {
-  width: "76px",
-  height: "33px",
-  paddingTop: 0,
-  backgroundColor: 0
-}
-
 class App extends Component {
 	constructor(props) {
       super(props);
@@ -158,19 +149,10 @@ class App extends Component {
                   </ListItem>);
               })}
             </Menu>
-            <Grid container spacing={16}>
-              <Grid item>
-                <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-                  {Constants.DEMO_HEADER}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Image
-                  src={insectus} style={image_style}
-                />
-              </Grid>
-              
-            </Grid>
+            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+              {Constants.DEMO_HEADER}
+            </Typography>
+            
 	          <div className={classes.grow} />
 	          <div className={classes.search}>
 	            <div className={classes.searchIcon}>

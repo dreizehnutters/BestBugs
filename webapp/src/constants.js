@@ -27,7 +27,7 @@ const WIDGET_ITEMS_DASHBOARD = [
     COLOR: "light-green",
     ICON: "opacity",
     NAME: "Current Humidity",
-    VALUE: "/",
+    VALUE: "26 %",
     KEY: "current_moisture",
     FORMAT: " %",
     PATH: "/datasets"
@@ -36,7 +36,7 @@ const WIDGET_ITEMS_DASHBOARD = [
     COLOR: "cyan",
     ICON: "wb_sunny",
     NAME: "Current Temperature",
-    VALUE: "/",
+    VALUE: "14 °C",
     KEY: "current_temp",
     FORMAT: " °C",
     PATH: "/models"
@@ -46,20 +46,20 @@ const WIDGET_ITEMS_DASHBOARD = [
     COLOR: "pink",
     ICON: "shopping_card",
     NAME: "Breeding Status",
-    VALUE: "/",
+    VALUE: "2. Stage",
     KEY: "current_breed_status",
     FORMAT: ". Stage",
     PATH: "/experiments"
   }
 ];
 
-const DEMO_HEADER = "BestBugs"
+const DEMO_HEADER = "BestBugs Insect Containers"
 
 const ENDPOINTS = {
-    "url":"../",
-    "current_data": "current_data",
-    "history":"historical_data",
-    "feeding":"containers/1"
+    "url":"http://192.168.137.1:8000",
+    "current_data": "/current_data",
+    "history":"/historical_data",
+    "feeding":"/containers/1"
 }
 
 

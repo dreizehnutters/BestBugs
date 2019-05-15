@@ -200,7 +200,7 @@ class Dashboard extends Component {
       <div>
 
         <div className={classes.root}>
-          <BlockHeader name="Dashboard" />
+          <BlockHeader name="" />
           <Paper className={classes.center}>
             <Grid container spacing={24}>
                 {listContainers}
