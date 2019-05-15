@@ -8,8 +8,10 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import Avatar from '@material-ui/core/Avatar';
 
 import Widgets from "./Widgets";
+import BlockHeader from "./BlockHeader";
 /**
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -41,19 +43,19 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 4,
     padding: theme.spacing.unit * 2
   },
-  tiles: {
-    width: "100%"
-  },
   image: {
-    width: 128,
-    height: 128,
+    width: 80,
+    height: 80,
   },
   img: {
     margin: 'auto',
     display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    maxWidth: '70%',
+    maxHeight: '70%',
   },
+  button: {
+    margin: theme.spacing.unit * 1,
+  }
 });
 
 class Dashboard extends Component {
@@ -69,25 +71,25 @@ class Dashboard extends Component {
         {
           "image":small_insect,
           "name": "Container 1",
-          "moisture": "55",
-          "temp": "34",
+          "moisture": "55 %",
+          "temp": "34 °C",
           "id": 463463
 
         },
         {
           "image":full_insect,
           "name": "Container 2",
-          "moisture": "55",
-          "temp": "35",
+          "moisture": "55 %",
+          "temp": "35 °C",
           "id": 464425
 
         },
         {
           "image":full_insect,
           "name": "Container 3",
-          "moisture": "55",
-          "temp": "35",
-          "id": 464425
+          "moisture": "55 %",
+          "temp": "28 °C",
+          "id": 46443225
 
         },
       ]
@@ -131,8 +133,8 @@ class Dashboard extends Component {
       var stats = data;
       let container = this.state.container;
 
-      container[0].moisture = stats.current_moisture;
-      container[1].moisture = stats.current_temp;
+      container[0].moisture = stats.current_moisture + " %";
+      container[0].temp = stats.current_temp + " °C";
 
       this.setState({
         container: container
@@ -159,14 +161,15 @@ class Dashboard extends Component {
     const { classes } = this.props;
 
     const listContainers = this.state.container.map((data) =>
-              <Paper key={data.name} className={classes.paper}>
+                <Grid item xs={12} sm >
+                <Paper key={data.name} className={classes.paper}>
                 <Grid container spacing={24}>
                   <Grid item>
-                    <ButtonBase className={classes.image}>
+                    <Avatar className={classes.image}>
                       <img className={classes.img} alt="complex" src={data.image} />
-                    </ButtonBase>
+                    </Avatar>
                   </Grid>
-                  <Grid item xs={12} sm container>
+                  <Grid item xs={6} sm container>
                     <Grid item xs container direction="column" spacing={16}>
                       <Grid item xs>
                         <Typography gutterBottom variant="subtitle1">
@@ -177,29 +180,38 @@ class Dashboard extends Component {
                         <Typography color="textSecondary">ID: {data.id}</Typography>
                       </Grid>
                       <Grid item>
-                        <Typography style={{ cursor: 'pointer' }}>Feed</Typography>
+                        <Button variant="contained" color="primary" className={classes.button}>
+                          Feed
+                        </Button>
+                        <Button variant="contained" color="secondary" className={classes.button}>
+                          Breed
+                        </Button>
                       </Grid>
                     </Grid>
                     <Grid item>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Paper>
+                </Paper>
+                </Grid>
     );
 
     return (
       <div>
 
         <div className={classes.root}>
+          <BlockHeader name="" />
           <Paper className={classes.center}>
             <Grid container spacing={24}>
-              
                 {listContainers}
-                
              
             </Grid>
           </Paper>
+          <Button component="span" variant="outlined" className={classes.button}>
+              Add Container
+            </Button>
         </div>
+
       </div>
     );
   };
