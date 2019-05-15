@@ -7,7 +7,7 @@
 #define MOISTURE_SENSOR_MIN 0
 #define MOISTURE_SENSOR_MAX 950
 #define LED_PIN 5
-#define N_LEDS 3
+#define N_LEDS 17
 #define SAT 255
 #define VAL 255
 
@@ -20,8 +20,17 @@
 #define MOISTURE_TOO_WET 60
 
 
+#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_Sensor.h>
+#include "Adafruit_BME680.h"
+#define SEALEVELPRESSURE_HPA (1013.25)
+Adafruit_BME680 bme; // I2C
+
+
 CRGB leds[N_LEDS];
 CRGB led_color = CRGB::Black;
+float lastTemperature = 24.1;
 
 
 unsigned long postTimer;
@@ -42,7 +51,16 @@ int readMoisture(){
 }
 
 float readTemperature(){
-  return(24.0 + (random(-10,10) / 10.0));
+  if (! bme.performReading()) {
+    Serial.println("Failed to perform reading :( Returning old temperature value");
+    return(lastTemperature);
+  }
+  float temperature = bme.temperature;
+  lastTemperature = temperature;
+  Serial.print("Temperature = ");
+  Serial.print(temperature);
+  Serial.println(" *C");
+  return(temperature);
 }
 
 void postMyData(int moisture, float temperature){
@@ -83,11 +101,28 @@ void postMyData(int moisture, float temperature){
 void setup() {
   // initialize serial communication at 115200
   Serial.begin(115200);
+  
+  // BME680 setup
+  while (!Serial);
+  Serial.println(F("BME680 test"));
+
+  if (!bme.begin()) {
+    Serial.println("Could not find a valid BME680 sensor, check wiring!");
+    while (1);
+  }
+
+  // Set up oversampling and filter initialization
+  bme.setTemperatureOversampling(BME680_OS_8X);
+  bme.setHumidityOversampling(BME680_OS_2X);
+  bme.setPressureOversampling(BME680_OS_4X);
+  bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
+  bme.setGasHeater(320, 150); // 320*C for 150 ms
+  
   // LED setup
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, N_LEDS);
+  
   // WiFi setup
   WiFi.begin("BestBugsLAN", "yummybugs");   //WiFi connection
- 
   while (WiFi.status() != WL_CONNECTED) {  //Wait for the WiFI connection completion
     delay(500);
     Serial.println("Waiting for connection");

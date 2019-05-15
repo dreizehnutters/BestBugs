@@ -129,11 +129,12 @@ class ContainerAPI(Resource):
         cur_data = request.get_json()
 
         if platform != 'Windows':
-            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%s")
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%S")
         else:
-            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M")
+            cur_time = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M:%S")
 
         if 'current_temp' in cur_data:
+            print(cur_data)
             shelve_db['containers'][container_id]['current_data'] = cur_data
 
             hist_data = shelve_db['containers'][container_id]['historical_data']
@@ -143,8 +144,8 @@ class ContainerAPI(Resource):
             
             shelve_db['containers'][container_id]['historical_data'] = hist_data
         
-        if 'food' in cur_data:
-            print(33333 ,cur_data)
+        elif 'food' in cur_data:
+            print(cur_data)
             hist_data = shelve_db['containers'][container_id]['foods']
 
             hist_data['food_history'].append([cur_data['time'], cur_data['food'], cur_data['weight']])
