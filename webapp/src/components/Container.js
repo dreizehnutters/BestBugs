@@ -74,7 +74,7 @@ class Container extends Component {
         {
           "name":"moisture",
           "x_axis":"Time",
-          "y_axis":"Moisture",
+          "y_axis":"Moisture in %",
           "title":"Moisture over Time",
           "data":[
                   ['time', 'moisture'],
@@ -93,7 +93,7 @@ class Container extends Component {
         {
           "name":"temperature",
           "x_axis":"Time",
-          "y_axis":"Temperature",
+          "y_axis":"Temperature in °C",
           "title":"Temperature over Time",
           "data":[
                   ['time', 'temperature'],
@@ -143,32 +143,31 @@ class Container extends Component {
         console.log("wait");
         StudioApi.getHistoryData()
         .then((data) => {
+          console.log(data);
+          if(data["hist_moist"].length > 2){
+            let chart_data = that.state.charts;
 
-          let chart_data = that.state.charts;
+            chart_data[0].data = [['time', 'moisture']].concat(data["hist_moist"].map(x => [new Date(
+              x[0].slice(0,2),
+              x[0].slice(3,5),
+              x[0].slice(6,10),
+              x[0].slice(11,13),
+              x[0].slice(14,16),
+              x[0].slice(17,19)),x[1]]));
+            chart_data[1].data = [['time', 'temperature']].concat(data["hist_temp"].map(x => [new Date(
+              x[0].slice(0,2),
+              x[0].slice(3,5),
+              x[0].slice(6,10),
+              x[0].slice(11,13),
+              x[0].slice(14,16),
+              x[0].slice(17,19)),x[1]]));
 
-          console.log(data["hist_moist"].map(x => [new Date(
-            x[0].slice(0,2),
-            x[0].slice(3,5),
-            x[0].slice(6,10),
-            x[0].slice(11,13),
-            x[0].slice(14,16)),x[1]]));
+            that.setState({
+              charts: chart_data
+            });
+          }
 
-          chart_data[0].data = [['time', 'moisture']].concat(data["hist_moist"].map(x => [new Date(
-            x[0].slice(0,2),
-            x[0].slice(3,5),
-            x[0].slice(6,10),
-            x[0].slice(11,13),
-            x[0].slice(14,16)),x[1]]));
-          chart_data[1].data = [['time', 'temperature']].concat(data["hist_temp"].map(x => [new Date(
-            x[0].slice(0,2),
-            x[0].slice(3,5),
-            x[0].slice(6,10),
-            x[0].slice(11,13),
-            x[0].slice(14,16)),x[1]]));
-
-          that.setState({
-            charts: chart_data
-          });
+          
 
           });
     }, 2000);

@@ -56,10 +56,10 @@ const WIDGET_ITEMS_DASHBOARD = [
 const DEMO_HEADER = "BestBugs Insect Containers"
 
 const ENDPOINTS = {
-    "url":"../",
-    "current_data": "current_data",
-    "history":"historical_data",
-    "feeding":"containers/1"
+    "url":"..",
+    "current_data": "/current_data",
+    "history":"/historical_data",
+    "feeding":"/containers/1"
 }
 
 
