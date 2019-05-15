@@ -26,7 +26,7 @@ const WIDGET_ITEMS_DASHBOARD = [
   {
     COLOR: "light-green",
     ICON: "opacity",
-    NAME: "Current Humidity",
+    NAME: "Current Moisture",
     VALUE: "26 %",
     KEY: "current_moisture",
     FORMAT: " %",

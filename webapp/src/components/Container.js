@@ -58,6 +58,15 @@ const styles = theme => ({
   }
 });
 
+const moist_max = 20;
+const moist_min = 5;
+
+const temp_max = 40;
+const temp_min = 20;
+
+const max_color = "orange";
+const min_color = "orange";
+
 class Container extends Component {
   constructor(props) {
     super(props);
@@ -77,17 +86,17 @@ class Container extends Component {
           "y_axis":"Moisture in %",
           "title":"Moisture over Time",
           "data":[
-                  ['time', 'moisture'],
-                  [new Date(2019, 1 ,1, 13, 10), 0],
-                  [new Date(2019, 1 ,1, 14, 10), 10],
-                  [new Date(2019, 1 ,1, 15, 10), 23],
-                  [new Date(2019, 1 ,1, 16, 10), 17],
-                  [new Date(2019, 1 ,1, 17, 10), 18],
-                  [new Date(2019, 1 ,1, 18, 10), 9],
-                  [new Date(2019, 1 ,1, 19, 10), 11],
-                  [new Date(2019, 1 ,1, 20, 10), 27],
+                  ['time', 'moisture', 'min', 'max'],
+                  [new Date(2019, 1 ,1, 13, 10), 0, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 14, 10), 10, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 15, 10), 23, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 16, 10), 17, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 17, 10), 18, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 18, 10), 9, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 19, 10), 11, moist_min, moist_max],
+                  [new Date(2019, 1 ,1, 20, 10), 27, moist_min, moist_max],
                 ],
-          "color":['blue']
+          "color":['blue',min_color,max_color]
 
         },
         {
@@ -96,17 +105,17 @@ class Container extends Component {
           "y_axis":"Temperature in °C",
           "title":"Temperature over Time",
           "data":[
-                  ['time', 'temperature'],
-                  [new Date(2019, 1 ,1, 13, 10), 0],
-                  [new Date(2019, 1 ,1, 14, 10), 3],
-                  [new Date(2019, 1 ,1, 15, 10), 6],
-                  [new Date(2019, 1 ,1, 16, 10), 8],
-                  [new Date(2019, 1 ,1, 17, 10), 13],
-                  [new Date(2019, 1 ,1, 18, 10), 16],
-                  [new Date(2019, 1 ,1, 19, 10), 13],
-                  [new Date(2019, 1 ,1, 20, 10), 12],
+                  ['time', 'temperature',"min","max"],
+                  [new Date(2019, 1 ,1, 13, 10), 0, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 14, 10), 3, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 15, 10), 6, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 16, 10), 8, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 17, 10), 13, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 18, 10), 16, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 19, 10), 13, temp_min, temp_max],
+                  [new Date(2019, 1 ,1, 20, 10), 12, temp_min, temp_max],
                 ],
-          "color":['red']
+          "color":['red',min_color,max_color]
 
         },
       ] 
@@ -153,14 +162,14 @@ class Container extends Component {
               x[0].slice(6,10),
               x[0].slice(11,13),
               x[0].slice(14,16),
-              x[0].slice(17,19)),x[1]]));
+              x[0].slice(17,19)),x[1], moist_min, moist_max]));
             chart_data[1].data = [['time', 'temperature']].concat(data["hist_temp"].map(x => [new Date(
               x[0].slice(0,2),
               x[0].slice(3,5),
               x[0].slice(6,10),
               x[0].slice(11,13),
               x[0].slice(14,16),
-              x[0].slice(17,19)),x[1]]));
+              x[0].slice(17,19)),x[1], temp_min, temp_max]));
 
             that.setState({
               charts: chart_data
@@ -238,7 +247,7 @@ class Container extends Component {
                   series: {
                     1: { curveType: 'function' },
                   },
-                  lineWidth: 5,
+                  lineWidth: 3,
                   legend: {position: 'none'},
                   colors: data.color, 
                   title:data.title,
